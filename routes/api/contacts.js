@@ -72,7 +72,7 @@ router.delete("/:contactId", async (req, res, next) => {
   }
 });
 
-router.put("/:contactId", async (req, res, next) => {
+/*router.put("/:contactId", async (req, res, next) => {
 try {
   const { error } = addSchema.validate(req.body);
   if (error) {
@@ -87,6 +87,29 @@ try {
 } catch (error) {
   next(error);
 }
-});
+});*/
+router.put("/:contactId", async (req, res, next) => {
+  try {
+    const { error } = addSchema.validate(req.body);
+    if (error) {
+      throw HttpError(400, error.message);
+    }
+    const { contactId } = req.params;
+    const contact = await getContactById(contactId);
+    if (!contact) {
+      throw HttpError(404, 'Контакт не знайдено')
+    }
+    const updateContact ={
+      ...contact,
+      name:req.body.name,
+      email:req.body.email,
+      phone:req.body.phone,
+    };
+    const result = await updateContact(contactId, updateContact);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+  });
 
 module.exports = router;
