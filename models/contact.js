@@ -2,7 +2,6 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 
-
 const contactSchema = new Schema({
   name: {
     type: String,
@@ -47,7 +46,5 @@ module.exports = {
   Contact,
   schemas,
 };
-
-
 
 module.exports = { Contact, schemas };
