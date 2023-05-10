@@ -10,7 +10,7 @@ mongoose.set('strictQuery', true);
 mongoose.connect(DB_HOST)
   .then(() => {
     app.listen(PORT)
-    console.log("Процес пішов неспинно уперед !!")
+    console.log("Процес пішов неспинно і незламно уперед !!")
   })
   .catch(error => {
     console.log(error.message);
