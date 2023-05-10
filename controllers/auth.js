@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar");
+
 require('dotenv').config()
 
 const {SECRET_KEY} = process.env;
@@ -11,7 +13,8 @@ const {HttpError, ctrlWrapper} = require("../helpers");
 const register = async(req,res,next)=>{
     const {email,password} = req.body;
 
-    const hashPassword =await bcrypt.hash(password,10)
+    const hashPassword = await bcrypt.hash(password, 10);
+    const avatarURL = gravatar.url(email);
 
     const user = await User.findOne({email});
     
@@ -19,7 +22,8 @@ const register = async(req,res,next)=>{
         throw HttpError(409,"Email already in use") 
     }
     
-    const newUser = await User.create({...req.body,password:hashPassword});
+    const newUser =
+        await User.create({ ...req.body, password: hashPassword, avatarURL });
 
     res.status(201).json({
         email: newUser.email,
