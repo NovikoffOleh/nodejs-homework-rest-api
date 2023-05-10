@@ -43,7 +43,7 @@ const login = async(req,res) =>{
         throw HttpError(401, "Email or password invalid")
     }
 
-    const payload ={id:user._id}
+   const payload ={id:user._id}
 
     const token = jwt.sign(payload,SECRET_KEY, {expiresIn:"23h"});
     await User.findByIdAndUpdate(user._id,{token});
@@ -60,7 +60,7 @@ const getCurrent = async(req,res) => {
 }
 
 const logout = async(req,res)=>{
-    const {_id} = req.user;
+    const {_id} = req;
     await User.findByIdAndUpdate(_id, {token:""});
 
     res.status(204)
