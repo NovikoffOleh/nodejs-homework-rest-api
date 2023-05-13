@@ -14,32 +14,37 @@ const {User} =require("../models/users");
 
 const {HttpError, ctrlWrapper, sendEmail} = require("../helpers");
 
-const register = async(req,res,next)=>{
-    const {email,password} = req.body;
+const register = async(req, res)=> {
+    const {email, password} = req.body;
+    const user = await User.findOne({email});
+
+    if(user){
+        throw HttpError(409, "Email already in use");
+    }
 
     const hashPassword = await bcrypt.hash(password, 10);
     const avatarURL = gravatar.url(email);
     const verificationCode = nanoid();
 
-    const user = await User.findOne({email});
-    
-    if(user){
-        throw HttpError(409,"Email already in use") 
-    }
-    
-    const newUser =
-        await User.create({ ...req.body, password: hashPassword, avatarURL, verificationCode });
+    const newUser = await User.create({...req.body, password: hashPassword, avatarURL, verificationCode});
     
     const verifyEmail = {
-        to: email,
-        subject: "Verify email",
-        html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${verificationCode}">Click verify email</a>`
+    to: email,
+    subject: "Verify email",
+    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}" >Click here to verify your email</a>`,
+  };
+
+     try {
+         await sendEmail(verifyEmail);
+         } catch (error) {
+         console.log(error);
+         throw HttpError(500, "Failed to send verification email");
     };
-    await sendEmail(verifyEmail);
-    
+
+
     res.status(201).json({
         email: newUser.email,
-        password: newUser.password,
+        name: newUser.name,
     })
 }
 
@@ -94,7 +99,8 @@ const logout = async(req,res)=>{
     res.status(200).json({
        avatarURL,
     })*/
-    const updateAvatar = async (req, res) => {
+    
+const updateAvatar = async (req, res) => {
     const {_id} = req.user;
     const { path: tempUpload, originalname } = req.file;
     const filename = `${_id}_${originalname}`;
