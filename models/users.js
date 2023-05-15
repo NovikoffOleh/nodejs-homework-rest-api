@@ -29,7 +29,7 @@ const userSchema = new Schema({
     },
     token: {
         type: String,
-        default: " "
+        default: "",
     },
     avatarURL:{
       type: String,
@@ -41,7 +41,7 @@ const userSchema = new Schema({
     },
     verificationCode: {
         type: String,
-        default: ""
+        default: "",
     }
 
 },  { versionKey: false, timeseries: true })
