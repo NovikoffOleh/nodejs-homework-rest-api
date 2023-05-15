@@ -3,10 +3,15 @@ const Joi = require('joi');
 
 const { handleMongooseError } = require("../helpers");
 
-// eslint-disable-next-line no-useless-escape
+
+
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const userSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+    },
 
     password: {
         type: String,
@@ -24,13 +29,25 @@ const userSchema = new Schema({
         enum: ["starter", "pro", "business"],
         default: "starter"
     },
-    token: String
+
+    token: {
+        type: String,
+        default: " "
+    },
+    avatarURL:{
+      type: String,
+      required: true,  
+    }
+
 
 },  { versionKey: false, timeseries: true })
 
 userSchema.post("save", handleMongooseError);
 
 const registerSchema = Joi.object({
+
+    name: Joi.string().required(),
+
     email: Joi.string().required(),
     password: Joi.string().required(),
     subscription: Joi.string(),
@@ -54,3 +71,4 @@ const User = model("user", userSchema);
 module.exports = { 
     schemas, 
     User, }
+
