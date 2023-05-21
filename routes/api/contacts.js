@@ -21,6 +21,4 @@ router.put('/:contactId',authenticate,isValidId, validateBody(schema.updateSchem
 
 router.patch('/:contactId/favorite',authenticate,isValidId, validateBody(schema.updateFavoriteSchema), ctrl.updateFavorite)
 
-
-
 module.exports = router
