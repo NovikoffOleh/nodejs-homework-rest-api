@@ -11,7 +11,6 @@ const getAll = async (req, res) => {
     res.json(result)
 }
 
-
 const getById = async (req, res) => {
     const { contactId } = req.params;
     const {_id:owner} = req.user;
@@ -46,7 +45,6 @@ const updateById = async (req, res) => {
     const result = await Contact.findOneAndUpdate({_id: contactId, owner}, body, {new: true});
     res.json(result)
 }
-
 
 const updateFavorite = async (req, res) => {
     const { contactId } = req.params;
